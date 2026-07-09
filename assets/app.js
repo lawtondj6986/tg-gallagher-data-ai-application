@@ -171,11 +171,11 @@
       "Local to Massachusetts — present, available, invested",
     ];
     $("#candDiff").innerHTML = diffs.map((d) => `<li>${d}</li>`).join("");
-    $("#candContact").innerHTML =
-      `<span class="chip">✉ <a href="mailto:${c.email}">${c.email}</a></span>
-       <span class="chip">☎ ${c.phone}</span>
-       <span class="chip">◎ ${c.location}</span>
-       <span class="chip">in ${c.linkedin}</span>`;
+    const chips = [`<span class="chip">✉ <a href="mailto:${c.email}">${c.email}</a></span>`];
+    if (c.phone) chips.push(`<span class="chip">☎ ${c.phone}</span>`);
+    if (c.location) chips.push(`<span class="chip">◎ ${c.location}</span>`);
+    if (c.linkedin) chips.push(`<span class="chip">in ${c.linkedin}</span>`);
+    $("#candContact").innerHTML = chips.join("");
     $("#footContact").textContent = `${c.name} · ${c.email}`;
   }
 

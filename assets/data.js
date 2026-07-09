@@ -9,12 +9,12 @@ window.TGG = (function () {
 
   /* ---- Candidate / contact (edit these) --------------------------------- */
   const CANDIDATE = {
-    name: "Your Name",
+    name: "Daniel Lawton",
     role: "Head of Data Architecture & AI",
     email: "lawtondj@gmail.com",
-    phone: "(555) 555-0100",
+    phone: "", // add if you want it shown
     location: "South Shore, Massachusetts",
-    linkedin: "linkedin.com/in/your-handle",
+    linkedin: "", // add your LinkedIn handle to show it
     tagline:
       "A construction-aware data leader who has already built and shipped modern data platforms and AI products — not just theorized about them.",
   };
