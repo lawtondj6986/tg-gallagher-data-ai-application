@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-view="site">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TG Gallagher — Data & AI Platform · Candidate Briefing</title>
+  <meta name="description" content="A working prototype of the enterprise data & AI platform for TG Gallagher — command center, medallion architecture, and an AI project copilot. Application for Head of Data Architecture & AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a1b2e'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' font-weight='700' fill='%2335d0e0' text-anchor='middle'%3ETG%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ======================= TOP NAV ======================= -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="brand" href="#top" data-nav="top">
+        <span class="brand__mark">TG</span>
+        <span class="brand__name">GALLAGHER</span>
+        <span class="brand__sub">Data&nbsp;&amp;&nbsp;AI&nbsp;Platform</span>
+      </a>
+
+      <nav class="nav__links" id="siteLinks">
+        <a href="#overview" data-scroll>Overview</a>
+        <a href="#blueprint" data-scroll>Blueprint</a>
+        <a href="#pilots" data-scroll>AI Use Cases</a>
+        <a href="#roadmap" data-scroll>Roadmap</a>
+        <a href="#candidate" data-scroll>The Candidate</a>
+      </nav>
+
+      <div class="nav__actions">
+        <button class="btn btn--ghost cmdk-hint" id="openPalette" title="Command palette">
+          <kbd>⌘</kbd><kbd>K</kbd>
+        </button>
+        <button class="btn btn--ghost" id="openCopilotNav">Ask AI</button>
+        <button class="btn btn--primary" id="enterConsole">Enter Command Center</button>
+        <button class="btn btn--ghost btn--exit" id="exitConsole" hidden>Back to Briefing</button>
+      </div>
+    </div>
+    <div class="nav__ticker" id="ticker" aria-hidden="true"></div>
+  </header>
+
+  <!-- ======================= SITE (MARKETING) VIEW ======================= -->
+  <main id="siteView">
+    <a id="top"></a>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__grid" aria-hidden="true"></div>
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="wrap hero__content">
+        <div class="eyebrow">Application · Head of Data Architecture &amp; AI</div>
+        <h1 class="hero__title">
+          I didn't send a résumé.<br /><span class="grad">I built your command center.</span>
+        </h1>
+        <p class="hero__lede">
+          A working prototype of the enterprise data &amp; AI platform I'd lead for
+          <strong>TG Gallagher</strong> — a governed medallion architecture, an executive
+          command center over your projects, and an AI copilot that answers questions about
+          WIP, job cost, and margin in plain English. It's not a slide. Open it.
+        </p>
+        <div class="hero__cta">
+          <button class="btn btn--primary btn--lg" id="heroEnter">Enter the Command Center →</button>
+          <button class="btn btn--outline btn--lg" id="heroCopilot">Ask the AI Copilot</button>
+        </div>
+        <div class="hero__stats" id="heroStats"></div>
+      </div>
+    </section>
+
+    <!-- OVERVIEW / VALUE PROP -->
+    <section class="section" id="overview">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="kicker">Why this, why now</span>
+          <h2>Your data is authoritative in a dozen systems — and connected in none of them.</h2>
+          <p class="section__lede">
+            Vista, Procore, Trimble, estimating, scheduling, HRIS, BIM/fab — each one is right on its own.
+            The margin lives in the gaps between them. This platform closes the gaps and puts a
+            trusted number in front of the executive team, fast.
+          </p>
+        </div>
+        <div class="cards3" id="valueCards"></div>
+      </div>
+    </section>
+
+    <!-- BLUEPRINT -->
+    <section class="section section--alt" id="blueprint">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="kicker">The target architecture</span>
+          <h2>Medallion + semantic layer, governed end to end.</h2>
+          <p class="section__lede">Click any layer to see how it works. Raw source data lands once, is conformed and quality-checked, then served as governed business metrics to BI <em>and</em> AI.</p>
+        </div>
+        <div class="blueprint" id="blueprint-diagram"></div>
+        <div class="blueprint__detail" id="blueprintDetail"></div>
+      </div>
+    </section>
+
+    <!-- AI PILOTS -->
+    <section class="section" id="pilots">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="kicker">AI, tied to a number</span>
+          <h2>Prioritized use cases with measurable outcomes.</h2>
+          <p class="section__lede">Not AI for its own sake. Each pilot maps to a metric the executive team already cares about.</p>
+        </div>
+        <div class="pilots" id="pilotsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section class="section section--alt" id="roadmap">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="kicker">12–18 month plan</span>
+          <h2>Trust first. One visible win fast. Foundation in parallel.</h2>
+        </div>
+        <div class="roadmap" id="roadmapGrid"></div>
+      </div>
+    </section>
+
+    <!-- CANDIDATE -->
+    <section class="section" id="candidate">
+      <div class="wrap candidate">
+        <div class="candidate__left">
+          <span class="kicker">The candidate</span>
+          <h2 id="candName">Your Name</h2>
+          <p class="candidate__tag" id="candTag"></p>
+          <ul class="candidate__diff" id="candDiff"></ul>
+          <div class="candidate__contact" id="candContact"></div>
+        </div>
+        <div class="candidate__right">
+          <div class="quotecard">
+            <div class="quotecard__mark">“</div>
+            <p>A construction-aware data leader who has already <strong>built and shipped</strong> modern data platforms and AI products from the ground up — not just theorized about them.</p>
+            <div class="quotecard__foot">Positioning statement</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap footer__inner">
+        <div>
+          <div class="brand brand--footer"><span class="brand__mark">TG</span><span class="brand__name">GALLAGHER</span></div>
+          <p class="footer__note">Prototype · built as a candidate briefing for the Head of Data Architecture &amp; AI role. Company facts are public; all platform data is illustrative.</p>
+        </div>
+        <div class="footer__cta">
+          <button class="btn btn--primary" id="footEnter">Enter the Command Center</button>
+          <span id="footContact"></span>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ======================= CONSOLE (COMMAND CENTER) VIEW ======================= -->
+  <div id="consoleView" hidden>
+    <aside class="console__side">
+      <div class="console__brand"><span class="brand__mark">TG</span><div><strong>Command Center</strong><small>Enterprise Data &amp; AI</small></div></div>
+      <nav class="console__nav" id="consoleNav">
+        <button data-panel="exec" class="is-active"><i>▤</i> Executive Overview</button>
+        <button data-panel="projects"><i>▦</i> Projects</button>
+        <button data-panel="jobcost"><i>▨</i> Job Cost &amp; WIP</button>
+        <button data-panel="copilot"><i>✦</i> AI Copilot</button>
+        <button data-panel="sources"><i>⇄</i> Data Sources</button>
+        <button data-panel="governance"><i>◈</i> Governance</button>
+        <button data-panel="settings"><i>⚙</i> Control Panel</button>
+      </nav>
+      <div class="console__sidefoot">
+        <div class="pulse"><span class="pulse__dot"></span> Live · synced 4 min ago</div>
+        <button class="btn btn--ghost btn--sm" id="sideExit">← Back to briefing</button>
+      </div>
+    </aside>
+
+    <div class="console__main">
+      <div class="console__topbar">
+        <div class="console__title" id="panelTitle">Executive Overview</div>
+        <div class="console__tools">
+          <button class="btn btn--ghost btn--sm" id="consolePalette"><kbd>⌘</kbd><kbd>K</kbd> Commands</button>
+          <button class="btn btn--ghost btn--sm" id="genReport">Generate report</button>
+          <div class="avatar" title="Signed in as admin">AD</div>
+        </div>
+      </div>
+      <div class="console__scroll">
+        <section class="panel is-active" data-panel="exec" id="panel-exec"></section>
+        <section class="panel" data-panel="projects" id="panel-projects"></section>
+        <section class="panel" data-panel="jobcost" id="panel-jobcost"></section>
+        <section class="panel" data-panel="copilot" id="panel-copilot"></section>
+        <section class="panel" data-panel="sources" id="panel-sources"></section>
+        <section class="panel" data-panel="governance" id="panel-governance"></section>
+        <section class="panel" data-panel="settings" id="panel-settings"></section>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= COMMAND PALETTE ======================= -->
+  <div class="palette" id="palette" hidden>
+    <div class="palette__scrim" data-close-palette></div>
+    <div class="palette__box" role="dialog" aria-label="Command palette">
+      <input type="text" id="paletteInput" placeholder="Type a command…  (try 'flag risk', 'wip report', 'copilot')" autocomplete="off" />
+      <ul class="palette__list" id="paletteList"></ul>
+      <div class="palette__foot"><kbd>↑</kbd><kbd>↓</kbd> navigate · <kbd>↵</kbd> run · <kbd>esc</kbd> close</div>
+    </div>
+  </div>
+
+  <!-- ======================= AI COPILOT DOCK ======================= -->
+  <div class="copilot" id="copilotDock" hidden>
+    <div class="copilot__head">
+      <div class="copilot__id"><span class="copilot__spark">✦</span> Project Copilot <small>RAG · grounded to governed data</small></div>
+      <button class="copilot__close" id="copilotClose" aria-label="Close">✕</button>
+    </div>
+    <div class="copilot__stream" id="copilotStream"></div>
+    <div class="copilot__chips" id="copilotChips"></div>
+    <form class="copilot__input" id="copilotForm">
+      <input type="text" id="copilotText" placeholder="Ask about WIP, margin, at-risk jobs, the architecture…" autocomplete="off" />
+      <button class="btn btn--primary btn--sm" type="submit">Send</button>
+    </form>
+  </div>
+  <button class="copilot-fab" id="copilotFab" title="Ask the AI Copilot" hidden>✦</button>
+
+  <!-- ======================= TOASTS ======================= -->
+  <div class="toasts" id="toasts"></div>
+
+  <!-- ======================= TOOLTIP ======================= -->
+  <div class="chart-tip" id="chartTip" hidden></div>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
