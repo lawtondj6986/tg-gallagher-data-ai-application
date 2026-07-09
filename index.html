@@ -31,13 +31,13 @@
         <a href="#market" data-scroll>Market</a>
         <a href="#blueprint" data-scroll>Blueprint</a>
         <a href="#roi" data-scroll>ROI</a>
+        <a href="#growth" data-scroll>Growth</a>
         <a href="#pilots" data-scroll>AI</a>
         <a href="#roadmap" data-scroll>Roadmap</a>
-        <a href="#candidate" data-scroll>Candidate</a>
       </nav>
       <div class="nav__actions">
         <button class="btn btn--ghost cmdk-hint" id="openPalette" title="Command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
-        <button class="btn btn--ghost" id="openCopilotNav">Ask AI</button>
+        <button class="btn btn--ghost" id="presentBtn">▶ Board Brief</button>
         <button class="btn btn--primary" id="enterConsole">Command Center →</button>
       </div>
     </div>
@@ -121,6 +121,28 @@
       </div>
     </section>
 
+    <!-- GROWTH / UNTAPPED MARKET -->
+    <section class="section" id="growth">
+      <div class="wrap">
+        <div class="section__head" data-reveal>
+          <span class="kicker">Untapped market potential</span>
+          <h2>Then it stops defending margin — and starts growing the company.</h2>
+          <p class="section__lede">The same data that protects today's jobs points to tomorrow's. Market sizing, an opportunity whitespace map, and an AI-scored pipeline that tells TG Gallagher exactly which pursuits to chase.</p>
+        </div>
+        <div class="growth-tam" id="growthTam" data-reveal></div>
+        <div class="growth-grid" data-reveal>
+          <div class="growth-card">
+            <div class="c-card__head" style="margin-bottom:6px"><span class="growth-card__title">Opportunity whitespace</span><span class="growth-card__sub">attractiveness × TG fit · bubble = $M</span></div>
+            <div id="growthQuadrant"></div>
+          </div>
+          <div class="growth-card">
+            <div class="c-card__head" style="margin-bottom:6px"><span class="growth-card__title">AI-scored pipeline</span><span class="growth-card__sub">win-probability × margin</span></div>
+            <div id="growthPipeline"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- AI PILOTS -->
     <section class="section section--alt" id="pilots">
       <div class="wrap">
@@ -188,6 +210,7 @@
         <button data-panel="insights"><i>✦</i> AI Insights</button>
         <button data-panel="projects"><i>▦</i> Projects</button>
         <button data-panel="jobcost"><i>▨</i> Job Cost &amp; WIP</button>
+        <button data-panel="growth"><i>◎</i> Growth Radar</button>
         <button data-panel="copilot"><i>◆</i> AI Copilot</button>
         <button data-panel="sources"><i>⇄</i> Data Sources</button>
         <button data-panel="governance"><i>◈</i> Governance</button>
@@ -214,11 +237,25 @@
         <section class="panel" data-panel="insights" id="panel-insights"></section>
         <section class="panel" data-panel="projects" id="panel-projects"></section>
         <section class="panel" data-panel="jobcost" id="panel-jobcost"></section>
+        <section class="panel" data-panel="growth" id="panel-growth"></section>
         <section class="panel" data-panel="copilot" id="panel-copilot"></section>
         <section class="panel" data-panel="sources" id="panel-sources"></section>
         <section class="panel" data-panel="governance" id="panel-governance"></section>
         <section class="panel" data-panel="settings" id="panel-settings"></section>
       </div>
+    </div>
+  </div>
+
+  <!-- BOARD BRIEF · self-running keynote -->
+  <div class="present" id="present" hidden>
+    <div class="present__stage" id="presentStage"></div>
+    <div class="present__bar"><i id="presBar"></i></div>
+    <div class="present__ctrl">
+      <button class="present__btn" id="presPrev" aria-label="Previous">‹</button>
+      <div class="present__dots" id="presDots"></div>
+      <button class="present__btn" id="presPlay" aria-label="Play / pause">⏸</button>
+      <button class="present__btn" id="presNext" aria-label="Next">›</button>
+      <button class="present__btn present__exit" id="presExit">Exit ✕</button>
     </div>
   </div>
 

@@ -187,18 +187,67 @@ window.TGG = (function () {
     { q:["governance","security","rls","row level","privacy","compliance"], cite:"Governance model",
       a:"Governance is built in: row-level security (PMs → their projects, finance → all), column masking on rates/PII, bronze→gold lineage, semantic layer as the single metric truth. For AI: grounding to governed sources + an egress guardrail on external LLMs." },
     { q:["roi","value","save","savings","worth","payback"], cite:"ROI model",
-      a:"Conservative first-year impact: **~$3.2M**. ~0.5 pts of margin protected on $215M revenue (≈$1.1M), ~$1.4M in change-order leakage recovered, and ~7 hrs/week × 40 PMs of time returned (≈$0.7M). Platform run-cost is well under $0.5M/yr — a 6×+ return." },
+      a:"Conservative modeled year-1 impact: **~$3.2M** on $215M revenue — roughly $1.1M in margin protected (0.5 pt via earlier risk detection), $1.1M in change-order leakage recovered, and ~$1.0M of PM/estimator time returned (~7 hrs/wk × 40). Against a run-cost under $0.5M/yr, that's about a **7× return**. The ROI section lets you model your own numbers." },
     { q:["boston","new england","market","clients","healthcare","competitor"], cite:"Market · Salesforce",
       a:"TG Gallagher is New England's #1 mechanical contractor, building Boston since 1940. 59% of backlog is healthcare + life sciences — MGB, Boston Children's, Dana-Farber, MIT, Harvard, Vertex, Moderna, Takeda. This platform is the data edge that defends and grows that position." },
+    { q:["growth","whitespace","opportunity","expand","untapped","tam","market size","new market","pipeline","win","pursuit"], cite:"Growth Radar · Salesforce",
+      a:"Beyond defending margin, the platform targets growth. The New England mechanical market is ~$14B; the serviceable slice (healthcare, life-sci, higher-ed, data centers) is ~$5.2B and TG holds ~5.4%. Over **$1.1B of adjacent whitespace** is mapped: data-center cooling (+18%/yr), decarbonization retrofits (+15%/yr), and recurring life-science service. The AI-scored pipeline ranks live pursuits by win-probability × margin — e.g., Eli Lilly Devens (68% win, 19% margin) is a top 'Pursue.'" },
     { q:["roadmap","plan","timeline","phase","90 day","30 60 90"], cite:"Roadmap",
       a:"Four phases over 12–18 months: (1) Foundation & quick win — trusted WIP/job-cost view in 90 days; (2) Expand & prove AI; (3) Scale & self-service; (4) Optimize & lead with predictive models. Trust first, one visible win fast, foundation in parallel." },
     { q:["who","candidate","hire","why you","yourself","background","daniel","lawton"], cite:"Candidate briefing",
       a:"Daniel Lawton pairs real construction-operations roots (a family contracting business — estimating, job costing, scheduling, field) with hands-on modern data & AI delivery (shipped production data platforms, RAG systems, generative-AI products, governance-first). Talks cost codes with a PM in the morning, designs the data model in the afternoon, runs the adoption workshop after." },
   ];
 
+  /* ---- market sizing (untapped potential) -------------------------------- */
+  const MARKET_TAM = {
+    tam: 14.0, sam: 5.2, current: 0.28, // $B — New England mechanical / serviceable / TG revenue
+    sharePct: 5.4,
+    lines: [
+      { label: "Total New England mechanical market", value: 14.0, kind: "tam" },
+      { label: "Serviceable — healthcare, life-sci, higher-ed, data centers", value: 5.2, kind: "sam" },
+      { label: "TG Gallagher today", value: 0.28, kind: "now" },
+    ],
+  };
+
+  /* ---- growth whitespace (attractiveness × TG fit; bubble = $M opportunity) */
+  const GROWTH = [
+    { name: "Data-center cooling & mechanical", size: 320, fit: 58, attract: 92, growth: "+18%/yr", note: "Hyperscale + colo buildout across MA/CT. Adjacent to core HVAC skill; biggest single whitespace." },
+    { name: "Decarbonization / electrification retrofits", size: 280, fit: 74, attract: 88, growth: "+15%/yr", note: "Heat-pump conversions, energy-performance mandates. High attractiveness, strong fit." },
+    { name: "Healthcare capital programs", size: 260, fit: 90, attract: 82, growth: "+9%/yr", note: "Core strength — MGB, BCH, Dana-Farber, BIDMC pipelines. Defend and expand." },
+    { name: "Life-science lab expansion", size: 240, fit: 88, attract: 84, growth: "+11%/yr", note: "Cambridge/Seaport/Devens cluster. Core, high-complexity, high-margin." },
+    { name: "Prefab / modular fabrication-as-a-service", size: 130, fit: 86, attract: 70, growth: "+12%/yr", note: "Shop throughput at 1.15× — scale prefab to lift margin and de-risk labor." },
+    { name: "Life-science service contracts (recurring)", size: 90, fit: 82, attract: 76, growth: "+8%/yr", note: "Recurring, high-margin annuity revenue on installed base. Data-driven service model." },
+    { name: "Higher-ed energy performance", size: 70, fit: 68, attract: 60, growth: "+6%/yr", note: "Performance-contracting on university campuses. Steady, mission-aligned." },
+  ];
+
+  /* ---- AI-scored pipeline (win probability × value → prioritized pursuits) */
+  const PIPELINE = [
+    { name: "Eli Lilly — Devens Biologics", sector: "Biotech", value: 46.0, win: 68, margin: 19.0, action: "Pursue" },
+    { name: "MGB — Framingham Patient Tower", sector: "Healthcare", value: 52.0, win: 55, margin: 18.0, action: "Pursue" },
+    { name: "Hyperscale DC — Westborough", sector: "Data Center", value: 61.0, win: 34, margin: 21.0, action: "Strategic" },
+    { name: "Tufts Medical — Modernization", sector: "Healthcare", value: 29.0, win: 61, margin: 17.5, action: "Pursue" },
+    { name: "MIT Lincoln Lab — Addition", sector: "Life Sciences", value: 37.0, win: 47, margin: 18.5, action: "Pursue" },
+    { name: "Boston Dynamics — HQ Mechanical", sector: "Commercial", value: 18.0, win: 40, margin: 16.0, action: "Watch" },
+  ];
+
+  /* ---- Board Brief · self-running executive keynote ---------------------- */
+  const PRESENTATION = [
+    { eyebrow: "Enterprise Data & AI · Board Brief", title: "An operating system for New England's mechanical heavyweight.", body: "A working prototype — built by Daniel Lawton for the Head of Data Architecture & AI role at TG Gallagher.", metric: "", metricLabel: "", accent: "cy" },
+    { eyebrow: "The problem worth $millions", title: "Your data is authoritative in a dozen systems — and connected in none of them.", body: "Vista, Procore, Trimble, estimating, scheduling, HRIS, BIM. Each right alone. The margin leaks in the gaps between them.", metric: "10", metricLabel: "disconnected source systems", accent: "amber" },
+    { eyebrow: "The platform", title: "Governed medallion + semantic layer + AI — one source of truth.", body: "Raw data lands once, is conformed and quality-checked, then served as governed metrics to BI and AI. Row-level security end to end.", metric: "40", metricLabel: "governed metrics, defined once", accent: "cy" },
+    { eyebrow: "Live command center", title: "WIP, job cost, and margin — in seconds, not days of spreadsheets.", body: "A single trusted view the CEO, CFO, and every PM share. Assembled from Vista + Procore in real time.", metric: "$412.6M", metricLabel: "signed backlog, live", accent: "cy" },
+    { eyebrow: "AI that earns its seat", title: "Margin risk caught weeks before it hits the P&L.", body: "The platform flagged Northeastern ISEC II at 11.7% vs a 16.5% bid — early enough to act, grounded in Vista job cost and Procore schedule.", metric: "3–6 wks", metricLabel: "earlier risk detection", accent: "amber" },
+    { eyebrow: "The business case", title: "This platform pays for itself many times over.", body: "Margin protected + change-order leakage recovered + PM time returned — against a modeled run-cost under $0.5M/yr.", metric: "$3.2M", metricLabel: "modeled year-1 impact · ~7× return", accent: "green" },
+    { eyebrow: "Untapped potential", title: "Then it stops defending margin — and starts growing the company.", body: "AI-scored pipeline + a whitespace map: data-center cooling, decarbonization retrofits, and recurring life-science service — over $1B of addressable growth adjacent to your core.", metric: "$1.1B+", metricLabel: "addressable whitespace identified", accent: "cy" },
+    { eyebrow: "The plan", title: "Trust first. One visible win in 90 days. Advantage in 18 months.", body: "Foundation and a shipped WIP/job-cost view by day 90; AI pilots proven; self-service and predictive models at scale.", metric: "90", metricLabel: "days to the first executive win", accent: "cy" },
+    { eyebrow: "Why me", title: "I've been in the field and I've shipped the platform.", body: "Construction-operations roots and hands-on modern data & AI delivery. I can talk cost codes with a PM in the morning and design the data model in the afternoon.", metric: "", metricLabel: "", accent: "cy" },
+    { eyebrow: "The ask", title: "Let's build the data & AI edge for TG Gallagher.", body: "This isn't a proposal. It's already running. Enter the live command center — or let's talk.", metric: "", metricLabel: "", accent: "green", cta: true },
+  ];
+
   return {
     CANDIDATE, COMPANY, KPIS, TRADE_COLORS, STATUS_COLORS, PROJECTS, MONTHS, TRENDS,
     COST_VARIANCE, LABOR, BACKLOG_SECTOR, MARGIN_BRIDGE, CONNECTORS, GOVERNANCE,
     AI_PILOTS, ROADMAP, MARKET, INSIGHTS, ACTIVITY, COPILOT_KB,
+    MARKET_TAM, GROWTH, PIPELINE, PRESENTATION,
   };
 })();

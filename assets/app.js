@@ -138,6 +138,34 @@
     return `<svg class="kpi__spark" viewBox="0 0 ${w} ${h}"><path d="${data.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1)).join(" ")}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/></svg>`;
   }
 
+  // opportunity quadrant (attractiveness × fit, bubble = $M)
+  function bubbleQuadrant(items, dark) {
+    const w = 520, h = 340, pl = 46, pb = 42, pt = 18, pr = 20;
+    const ax = dark ? "var(--c-ink-3)" : "var(--ink-3)", lab = dark ? "#eaf2fb" : "#0c1622", grid = dark ? "var(--c-line)" : "var(--line-2)";
+    const x = (v) => pl + (v / 100) * (w - pl - pr), y = (v) => pt + (1 - v / 100) * (h - pt - pb);
+    const maxS = Math.max(...items.map((d) => d.size)), r = (s) => 12 + Math.sqrt(s / maxS) * 28;
+    let g = `<rect x="${x(50)}" y="${pt}" width="${w - pr - x(50)}" height="${y(50) - pt}" fill="rgba(23,182,199,.06)"/>`;
+    g += `<line x1="${x(50)}" y1="${pt}" x2="${x(50)}" y2="${h - pb}" stroke="${grid}" stroke-dasharray="3 3"/><line x1="${pl}" y1="${y(50)}" x2="${w - pr}" y2="${y(50)}" stroke="${grid}" stroke-dasharray="3 3"/>`;
+    g += `<text x="${x(74)}" y="${y(94)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--cy)">◇ SWEET SPOT</text>`;
+    g += `<text x="${(pl + w - pr) / 2}" y="${h - 6}" text-anchor="middle" font-size="10.5" fill="${ax}">TG capability / fit →</text>`;
+    g += `<text x="13" y="${(pt + h - pb) / 2}" text-anchor="middle" font-size="10.5" fill="${ax}" transform="rotate(-90 13 ${(pt + h - pb) / 2})">Market attractiveness →</text>`;
+    items.forEach((d) => {
+      const cx = x(d.fit), cy = y(d.attract), rr = r(d.size);
+      g += `<circle class="dot" cx="${cx}" cy="${cy}" r="${rr}" fill="rgba(23,182,199,.2)" stroke="var(--cy)" stroke-width="1.5" data-tip="<b>${esc(d.name)}</b> · $${fmt(d.size, 0)}M · ${d.growth}"/><text x="${cx}" y="${cy + 3}" text-anchor="middle" font-size="10" font-weight="700" fill="${lab}">$${fmt(d.size, 0)}M</text>`;
+    });
+    return `<svg viewBox="0 0 ${w} ${h}" width="100%">${g}</svg>`;
+  }
+
+  function pipelineTable(dark) {
+    const tbl = dark ? "c-table" : "pipe", sub = dark ? "var(--c-ink-3)" : "var(--ink-3)";
+    const tc = (a) => a === "Pursue" ? "pursue" : a === "Strategic" ? "strategic" : "watch";
+    const rows = D.PIPELINE.map((p) => `<tr><td class="name">${esc(p.name)}<br><small style="color:${sub}">${p.sector}</small></td>
+      <td class="tabnum">$${fmt(p.value, 0)}M</td>
+      <td><span class="winbar" style="background:${dark ? "var(--c-surface-3)" : "var(--paper-3)"}"><i style="width:${p.win}%"></i></span><span class="tabnum">${p.win}%</span></td>
+      <td class="tabnum">${fmt(p.margin, 1)}%</td><td><span class="tag ${tc(p.action)}">${p.action}</span></td></tr>`).join("");
+    return `<table class="${tbl}"><thead><tr><th>Pursuit</th><th>Value</th><th>AI win prob.</th><th>Margin</th><th>Call</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
   const statusClass = (s) => ({ "On Track": "ok", "Watch": "warn", "At Risk": "serious", "Critical": "crit" }[s] || "ok");
   const sevIco = { critical: "▲", serious: "◆", warning: "●", good: "✓" };
 
@@ -177,6 +205,7 @@
 
     renderBlueprint();
     renderROI();
+    renderGrowth();
 
     $("#pilotsGrid").innerHTML = D.AI_PILOTS.map((p) => `<div class="pilot"><div class="pilot__top"><h3>${p.name}</h3><span class="pilot__phase">${p.phase}</span></div><p>${p.desc}</p><div class="pilot__metric">${p.metric}</div></div>`).join("");
     $("#roadmapGrid").innerHTML = D.ROADMAP.map((r) => `<div class="rm"><div class="rm__phase">${r.phase}</div><h3>${r.title}</h3><ul>${r.items.map((i) => `<li>${i}</li>`).join("")}</ul><div class="rm__milestone">Milestone · <span>${r.milestone}</span></div></div>`).join("");
@@ -238,7 +267,7 @@
         <div class="roi__field"><label>Annual revenue <b id="rl-rev">$215M</b></label><input type="range" id="r-rev" min="150" max="400" step="5" value="215"></div>
         <div class="roi__field"><label>PMs &amp; estimators <b id="rl-pms">40</b></label><input type="range" id="r-pms" min="10" max="80" step="1" value="40"></div>
         <div class="roi__field"><label>Avg project margin <b id="rl-margin">18%</b></label><input type="range" id="r-margin" min="12" max="24" step="1" value="18"></div>
-        <div class="roi__note">Drivers: ~0.5 pt of margin protected via earlier risk detection, ~1.4% of revenue in change-order leakage recovered, and ~7 hrs/week returned per PM at a $85/hr loaded rate. Platform run-cost modeled at $0.45M/yr.</div>
+        <div class="roi__note">Drivers: ~0.5 pt of margin protected via earlier risk detection, ~0.5% of revenue in change-order leakage recovered, and ~7 hrs/week returned per PM at a $75/hr loaded rate. Platform run-cost modeled at $0.45M/yr. Deliberately conservative.</div>
       </div>
       <div class="roi__out">
         <div class="roi__big">Modeled year-1 impact</div>
@@ -252,12 +281,12 @@
   function computeROI() {
     $("#rl-rev").textContent = "$" + ROI.rev + "M"; $("#rl-pms").textContent = ROI.pms; $("#rl-margin").textContent = ROI.margin + "%";
     const marginProt = ROI.rev * 0.005;                       // 0.5 pt protected
-    const coRecovery = ROI.rev * 0.014;                       // 1.4% of revenue
-    const timeSaved = (ROI.pms * 7 * 48 * 85) / 1e6;          // hrs saved → $M
+    const coRecovery = ROI.rev * 0.005;                       // 0.5% of revenue (conservative)
+    const timeSaved = (ROI.pms * 7 * 48 * 75) / 1e6;          // hrs saved → $M
     const cost = 0.45;
     const total = marginProt + coRecovery + timeSaved;
     const mult = total / cost;
-    $("#roi-total").textContent = money(total);
+    $("#roi-total").textContent = "$" + fmt(total, 1) + "M";
     $("#roi-mult").textContent = `≈ ${mult.toFixed(1)}× return · net ${money(total - cost)} after run-cost`;
     $("#roi-lines").innerHTML = [
       ["Margin protected (earlier risk detection)", marginProt],
@@ -265,6 +294,15 @@
       ["PM / estimator time returned", timeSaved],
       ["Platform run-cost", -cost],
     ].map(([l, v]) => `<div class="roi__line"><span>${l}</span><b style="color:${v < 0 ? "#f6a7a7" : "#fff"}">${v < 0 ? "−" : "+"}${money(Math.abs(v))}</b></div>`).join("");
+  }
+
+  /* ---- growth (marketing) ---- */
+  function renderGrowth() {
+    const t = D.MARKET_TAM, maxV = t.lines[0].value;
+    $("#growthTam").innerHTML = t.lines.map((l) => `<div class="tam-row"><div class="tam-meta"><span>${esc(l.label)}</span><b>$${fmt(l.value, l.value < 1 ? 2 : 1)}B</b></div><div class="tam-bar ${l.kind}" style="width:${Math.max(7, (l.value / maxV) * 100)}%">${l.kind === "now" ? "TG · " + t.sharePct + "% share" : ""}</div></div>`).join("");
+    $("#growthQuadrant").innerHTML = bubbleQuadrant(D.GROWTH, false) +
+      `<div style="margin-top:12px;display:grid;gap:6px">${D.GROWTH.slice(0, 4).map((d) => `<div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-2)"><span>${esc(d.name)}</span><b style="color:var(--cy-deep)">$${fmt(d.size, 0)}M · ${d.growth}</b></div>`).join("")}</div>`;
+    $("#growthPipeline").innerHTML = pipelineTable(false);
   }
 
   /* ===================================================== CONSOLE PANELS */
@@ -383,6 +421,22 @@
       <div class="callout"><b>Cost code 23 64 (Chilled Water Plant)</b> is the largest unfavorable variance at −4.7%, concentrated on Northeastern ISEC II — the same job flagged Critical. The field-to-office signal this platform surfaces automatically.</div>`;
   }
 
+  function renderGrowthRadar() {
+    const t = D.MARKET_TAM;
+    $("#panel-growth").innerHTML = `
+      <p class="panel-lede">Growth intelligence — the same governed data, pointed forward. Market sizing, an AI-scored pipeline, and a whitespace map that turns data into TG Gallagher's next $1B of addressable work.</p>
+      <div class="c-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi"><div class="kpi__label">New England market · TAM</div><div class="kpi__val">$${fmt(t.tam, 0)}<span class="u">B</span></div></div>
+        <div class="kpi"><div class="kpi__label">Serviceable · SAM</div><div class="kpi__val">$${fmt(t.sam, 1)}<span class="u">B</span></div></div>
+        <div class="kpi"><div class="kpi__label">TG share of serviceable</div><div class="kpi__val">${fmt(t.sharePct, 1)}<span class="u">%</span></div></div>
+      </div>
+      <div class="c-grid two-col" style="margin-top:16px">
+        <div class="c-card"><div class="c-card__head"><span class="c-card__title">Opportunity whitespace</span><span class="c-card__sub">attractiveness × fit · bubble = $M</span></div>${bubbleQuadrant(D.GROWTH, true)}</div>
+        <div class="c-card"><div class="c-card__head"><span class="c-card__title">AI-scored pipeline</span><span class="c-card__sub">win prob × margin</span></div>${pipelineTable(true)}</div>
+      </div>
+      <div class="callout"><b>Over $1.1B of adjacent whitespace</b> — data-center cooling (+18%/yr), decarbonization retrofits (+15%/yr), and recurring life-science service. The AI pipeline flags <b>Eli Lilly Devens</b> (68% win, 19% margin) as the top pursuit. This is how data stops being a scorekeeper and starts driving growth.</div>`;
+  }
+
   function renderSources() {
     const live = D.CONNECTORS.filter((c) => c.status === "connected").length;
     $("#panel-sources").innerHTML = `
@@ -432,8 +486,8 @@
       <div class="c-grid two-col">${D.AI_PILOTS.map((p) => `<div class="c-card"><div class="c-card__head"><span class="c-card__title">${p.name}</span><span class="pill ${p.phase === "Live pilot" ? "ok" : "warn"}">${p.phase}</span></div><p style="color:var(--c-ink-2);font-size:13.5px;margin:0 0 10px">${p.desc}</p><div class="pilot__metric" style="color:var(--c-ink);border-top:1px solid var(--c-line);padding-top:10px">◆ ${p.metric}</div></div>`).join("")}</div>`;
   }
 
-  const PANELS = { exec: renderExec, insights: renderInsights, projects: renderProjects, jobcost: renderJobcost, copilot: renderCopilotPanel, sources: renderSources, governance: renderGovernance, settings: renderSettings };
-  const TITLES = { exec: "Executive Overview", insights: "AI Insights", projects: "Projects", jobcost: "Job Cost & WIP", copilot: "AI Copilot", sources: "Data Sources", governance: "Governance", settings: "Control Panel" };
+  const PANELS = { exec: renderExec, insights: renderInsights, projects: renderProjects, jobcost: renderJobcost, growth: renderGrowthRadar, copilot: renderCopilotPanel, sources: renderSources, governance: renderGovernance, settings: renderSettings };
+  const TITLES = { exec: "Executive Overview", insights: "AI Insights", projects: "Projects", jobcost: "Job Cost & WIP", growth: "Growth Radar", copilot: "AI Copilot", sources: "Data Sources", governance: "Governance", settings: "Control Panel" };
   let currentPanel = "exec";
   function showPanel(key) {
     currentPanel = key; PANELS[key]();
@@ -519,6 +573,8 @@
     { ic: "⚑", label: "Flag at-risk projects", hint: "action", run: () => { ensureConsole(); projFilter = "risk"; showPanel("projects"); toast("3 projects flagged", "Northeastern ISEC II · Moderna Norwood · Takeda"); } },
     { ic: "▣", label: "Generate WIP report", hint: "action", run: () => { ensureConsole(); showPanel("jobcost"); toast("WIP report generated", "Under-billed WIP $9.42M · by project"); } },
     { ic: "$", label: "Show the ROI model", hint: "action", run: () => { if (document.body.getAttribute("data-view") === "console") exitConsole(); location.hash = "#roi"; $("#roi").scrollIntoView({ behavior: "smooth" }); } },
+    { ic: "▶", label: "Play the Board Brief keynote", hint: "present", run: () => openPresent() },
+    { ic: "◎", label: "Growth Radar · whitespace & pipeline", hint: "console", run: () => { ensureConsole(); showPanel("growth"); } },
     { ic: "❋", label: "Ask copilot: what's at risk?", hint: "ai", run: () => { openCopilot(); setTimeout(() => sendCopilot("what's at risk?"), 250); } },
     { ic: "◱", label: "Enter Command Center", hint: "view", run: () => enterConsole("exec", true) },
     { ic: "←", label: "Back to candidate briefing", hint: "view", run: () => exitConsole() },
@@ -562,6 +618,38 @@
     chips(["What's at risk?", "What's the ROI?", "Explain the architecture", "The roadmap"]);
   }
 
+  /* ===================================================== BOARD BRIEF */
+  const PRES = D.PRESENTATION;
+  let presIdx = 0, presTimer = null, presPlaying = true;
+  function openPresent() {
+    $("#present").hidden = false; presIdx = 0; presPlaying = true; $("#presPlay").textContent = "⏸";
+    $("#presDots").innerHTML = PRES.map((_, i) => `<span data-ps="${i}"></span>`).join("");
+    $$("#presDots [data-ps]").forEach((d) => d.addEventListener("click", () => gotoPres(+d.dataset.ps)));
+    renderPres(); startPresTimer();
+  }
+  function closePresent() { $("#present").hidden = true; stopPresTimer(); }
+  function renderPres() {
+    const s = PRES[presIdx], acc = s.accent === "amber" ? "amber" : s.accent === "green" ? "green" : "";
+    $("#presentStage").innerHTML = `<div class="pslide">
+      <div class="pslide__eyebrow">${esc(s.eyebrow)}</div>
+      <div class="pslide__title">${esc(s.title)}</div>
+      ${s.metric ? `<div class="pslide__metric ${acc}">${esc(s.metric)}</div><div class="pslide__mlabel">${esc(s.metricLabel)}</div>` : ""}
+      <div class="pslide__body">${esc(s.body)}</div>
+      ${s.cta ? `<div class="pslide__cta"><button class="btn btn--primary btn--lg" id="presEnter">Enter the live Command Center →</button><button class="btn btn--outline btn--lg" id="presDone">Replay ↻</button></div>` : ""}
+    </div>`;
+    $$("#presDots span").forEach((d, i) => d.classList.toggle("on", i === presIdx));
+    $("#presBar").style.width = ((presIdx + 1) / PRES.length * 100) + "%";
+    const pe = $("#presEnter"); if (pe) pe.addEventListener("click", () => { closePresent(); enterConsole("exec"); });
+    const pd = $("#presDone"); if (pd) pd.addEventListener("click", () => gotoPres(0));
+  }
+  function gotoPres(i) { presIdx = (i + PRES.length) % PRES.length; renderPres(); if (presPlaying) startPresTimer(); }
+  function startPresTimer() { stopPresTimer(); if (!presPlaying) return; presTimer = setInterval(() => { if (presIdx >= PRES.length - 1) { stopPresTimer(); presPlaying = false; $("#presPlay").textContent = "↻"; } else gotoPres(presIdx + 1); }, 6200); }
+  function stopPresTimer() { if (presTimer) clearInterval(presTimer); presTimer = null; }
+  function togglePres() {
+    if (presIdx >= PRES.length - 1 && !presPlaying) { presPlaying = true; $("#presPlay").textContent = "⏸"; gotoPres(0); return; }
+    presPlaying = !presPlaying; $("#presPlay").textContent = presPlaying ? "⏸" : "▶"; if (presPlaying) startPresTimer(); else stopPresTimer();
+  }
+
   /* ===================================================== WIRE-UP */
   function bind() {
     $("#enterConsole").addEventListener("click", () => enterConsole("exec"));
@@ -569,10 +657,14 @@
     $("#footEnter").addEventListener("click", () => enterConsole("exec"));
     $("#sideExit").addEventListener("click", exitConsole);
     $("#heroCopilot").addEventListener("click", openCopilot);
-    $("#openCopilotNav").addEventListener("click", openCopilot);
     $("#copilotFab").addEventListener("click", openCopilot);
     $("#copilotClose").addEventListener("click", closeCopilot);
     $("#printBrief").addEventListener("click", () => window.print());
+    $("#presentBtn").addEventListener("click", openPresent);
+    $("#presPrev").addEventListener("click", () => gotoPres(presIdx - 1));
+    $("#presNext").addEventListener("click", () => gotoPres(presIdx + 1));
+    $("#presPlay").addEventListener("click", togglePres);
+    $("#presExit").addEventListener("click", closePresent);
     $$("#consoleNav button").forEach((b) => b.addEventListener("click", () => showPanel(b.dataset.panel)));
     $("#genReport").addEventListener("click", () => toast("Report generated", "Executive pack · WIP, margin, backlog, insights"));
     $("#consolePalette").addEventListener("click", openPalette);
@@ -587,6 +679,12 @@
 
     document.addEventListener("keydown", (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#palette").hidden ? openPalette() : closePalette(); return; }
+      if (!$("#present").hidden) {
+        if (e.key === "Escape") closePresent();
+        else if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); gotoPres(presIdx + 1); }
+        else if (e.key === "ArrowLeft") { e.preventDefault(); gotoPres(presIdx - 1); }
+        return;
+      }
       if (!$("#palette").hidden) {
         if (e.key === "Escape") closePalette();
         else if (e.key === "ArrowDown") { e.preventDefault(); palSel = Math.min(palItems.length - 1, palSel + 1); renderPalette(); }
@@ -606,5 +704,6 @@
   renderSite();
   bind();
   requestAnimationFrame(() => $$(".hero [data-reveal]").forEach((el, i) => setTimeout(() => el.classList.add("in"), 80 * i)));
-  if (/console|command/i.test(location.hash)) enterConsole("exec", true);
+  if (/present|brief|keynote/i.test(location.hash)) openPresent();
+  else if (/console|command/i.test(location.hash)) enterConsole("exec", true);
 })();
