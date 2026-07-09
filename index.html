@@ -3,13 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TG Gallagher — Data & AI Platform · Candidate Briefing</title>
-  <meta name="description" content="A working prototype of the enterprise data & AI platform for TG Gallagher — command center, medallion architecture, and an AI project copilot. Application for Head of Data Architecture & AI." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <title>TG Gallagher — Enterprise Data & AI Platform · Candidate Briefing</title>
+  <meta name="description" content="A working prototype of the enterprise data & AI platform for TG Gallagher — live command center, medallion architecture, AI copilot, and ROI model. Application for Head of Data Architecture & AI by Daniel Lawton." />
   <link rel="stylesheet" href="assets/styles.css" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a1b2e'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' font-weight='700' fill='%2335d0e0' text-anchor='middle'%3ETG%3C/text%3E%3C/svg%3E" />
 </head>
 <body>
+
+  <!-- BOOT OVERLAY (command center init) -->
+  <div class="boot" id="boot" hidden>
+    <div class="boot__inner">
+      <div class="boot__logo"><span class="brand__mark">TG</span> COMMAND CENTER</div>
+      <div class="boot__bar"><i id="bootBar"></i></div>
+      <div class="boot__log" id="bootLog"></div>
+    </div>
+  </div>
 
   <!-- ======================= TOP NAV ======================= -->
   <header class="nav" id="nav">
@@ -19,28 +27,23 @@
         <span class="brand__name">GALLAGHER</span>
         <span class="brand__sub">Data&nbsp;&amp;&nbsp;AI&nbsp;Platform</span>
       </a>
-
       <nav class="nav__links" id="siteLinks">
-        <a href="#overview" data-scroll>Overview</a>
+        <a href="#market" data-scroll>Market</a>
         <a href="#blueprint" data-scroll>Blueprint</a>
-        <a href="#pilots" data-scroll>AI Use Cases</a>
+        <a href="#roi" data-scroll>ROI</a>
+        <a href="#pilots" data-scroll>AI</a>
         <a href="#roadmap" data-scroll>Roadmap</a>
-        <a href="#candidate" data-scroll>The Candidate</a>
+        <a href="#candidate" data-scroll>Candidate</a>
       </nav>
-
       <div class="nav__actions">
-        <button class="btn btn--ghost cmdk-hint" id="openPalette" title="Command palette">
-          <kbd>⌘</kbd><kbd>K</kbd>
-        </button>
+        <button class="btn btn--ghost cmdk-hint" id="openPalette" title="Command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
         <button class="btn btn--ghost" id="openCopilotNav">Ask AI</button>
-        <button class="btn btn--primary" id="enterConsole">Enter Command Center</button>
-        <button class="btn btn--ghost btn--exit" id="exitConsole" hidden>Back to Briefing</button>
+        <button class="btn btn--primary" id="enterConsole">Command Center →</button>
       </div>
     </div>
-    <div class="nav__ticker" id="ticker" aria-hidden="true"></div>
   </header>
 
-  <!-- ======================= SITE (MARKETING) VIEW ======================= -->
+  <!-- ======================= SITE VIEW ======================= -->
   <main id="siteView">
     <a id="top"></a>
 
@@ -49,87 +52,109 @@
       <div class="hero__grid" aria-hidden="true"></div>
       <div class="hero__glow" aria-hidden="true"></div>
       <div class="wrap hero__content">
-        <div class="eyebrow">Application · Head of Data Architecture &amp; AI</div>
-        <h1 class="hero__title">
+        <div class="eyebrow" data-reveal>● Live prototype · Head of Data Architecture &amp; AI</div>
+        <h1 class="hero__title" data-reveal>
           I didn't send a résumé.<br /><span class="grad">I built your command center.</span>
         </h1>
-        <p class="hero__lede">
+        <p class="hero__lede" data-reveal>
           A working prototype of the enterprise data &amp; AI platform I'd lead for
-          <strong>TG Gallagher</strong> — a governed medallion architecture, an executive
-          command center over your projects, and an AI copilot that answers questions about
-          WIP, job cost, and margin in plain English. It's not a slide. Open it.
+          <strong>TG Gallagher</strong> — governed medallion architecture, a live executive command center over your projects, an AI copilot for WIP, job cost and margin, and a hard-dollar ROI model. It's not a slide. Open it.
         </p>
-        <div class="hero__cta">
+        <div class="hero__cta" data-reveal>
           <button class="btn btn--primary btn--lg" id="heroEnter">Enter the Command Center →</button>
-          <button class="btn btn--outline btn--lg" id="heroCopilot">Ask the AI Copilot</button>
+          <button class="btn btn--outline btn--lg" id="heroCopilot">✦ Ask the AI Copilot</button>
         </div>
-        <div class="hero__stats" id="heroStats"></div>
+        <div class="hero__stats" id="heroStats" data-reveal></div>
       </div>
     </section>
 
-    <!-- OVERVIEW / VALUE PROP -->
-    <section class="section" id="overview">
+    <!-- MARKET / BOSTON BAND -->
+    <section class="section market" id="market">
       <div class="wrap">
-        <div class="section__head">
-          <span class="kicker">Why this, why now</span>
-          <h2>Your data is authoritative in a dozen systems — and connected in none of them.</h2>
-          <p class="section__lede">
-            Vista, Procore, Trimble, estimating, scheduling, HRIS, BIM/fab — each one is right on its own.
-            The margin lives in the gaps between them. This platform closes the gaps and puts a
-            trusted number in front of the executive team, fast.
-          </p>
+        <div class="section__head" data-reveal>
+          <span class="kicker">New England · since 1940</span>
+          <h2 id="marketHead">The data backbone for New England's mechanical heavyweight.</h2>
+          <p class="section__lede">TG Gallagher builds the systems that keep Boston's hospitals, labs, and universities running. This platform turns the data behind that work into a durable competitive edge — margin protected, decisions faster, AI adopted safely.</p>
         </div>
-        <div class="cards3" id="valueCards"></div>
+        <div class="market__stats" id="marketStats" data-reveal></div>
+        <div class="market__clients" data-reveal>
+          <span class="market__clients-label">Trusted on flagship work for</span>
+          <div class="market__logos" id="marketLogos"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUE -->
+    <section class="section section--alt" id="overview">
+      <div class="wrap">
+        <div class="section__head" data-reveal>
+          <span class="kicker">The problem worth solving</span>
+          <h2>Your data is authoritative in a dozen systems — and connected in none of them.</h2>
+          <p class="section__lede">Vista, Procore, Trimble, estimating, scheduling, HRIS, BIM/fab — each right on its own. The margin lives in the gaps. This platform closes them and puts a trusted number in front of the executive team, fast.</p>
+        </div>
+        <div class="cards3" id="valueCards" data-reveal></div>
       </div>
     </section>
 
     <!-- BLUEPRINT -->
-    <section class="section section--alt" id="blueprint">
+    <section class="section" id="blueprint">
       <div class="wrap">
-        <div class="section__head">
+        <div class="section__head" data-reveal>
           <span class="kicker">The target architecture</span>
           <h2>Medallion + semantic layer, governed end to end.</h2>
-          <p class="section__lede">Click any layer to see how it works. Raw source data lands once, is conformed and quality-checked, then served as governed business metrics to BI <em>and</em> AI.</p>
+          <p class="section__lede">Click any layer. Raw source data lands once, is conformed and quality-checked, then served as governed business metrics to BI <em>and</em> AI.</p>
         </div>
-        <div class="blueprint" id="blueprint-diagram"></div>
+        <div class="blueprint" id="blueprint-diagram" data-reveal></div>
         <div class="blueprint__detail" id="blueprintDetail"></div>
       </div>
     </section>
 
-    <!-- AI PILOTS -->
-    <section class="section" id="pilots">
+    <!-- ROI CALCULATOR -->
+    <section class="section section--dark" id="roi">
       <div class="wrap">
-        <div class="section__head">
+        <div class="section__head section__head--light" data-reveal>
+          <span class="kicker kicker--light">The business case</span>
+          <h2>What this platform is worth to TG Gallagher.</h2>
+          <p class="section__lede section__lede--light">Move the sliders. Conservative assumptions, hard-dollar outputs — the language executives fund in.</p>
+        </div>
+        <div class="roi" id="roi-calc" data-reveal></div>
+      </div>
+    </section>
+
+    <!-- AI PILOTS -->
+    <section class="section section--alt" id="pilots">
+      <div class="wrap">
+        <div class="section__head" data-reveal>
           <span class="kicker">AI, tied to a number</span>
           <h2>Prioritized use cases with measurable outcomes.</h2>
-          <p class="section__lede">Not AI for its own sake. Each pilot maps to a metric the executive team already cares about.</p>
+          <p class="section__lede">Not AI for its own sake. Each pilot maps to a metric leadership already cares about.</p>
         </div>
-        <div class="pilots" id="pilotsGrid"></div>
+        <div class="pilots" id="pilotsGrid" data-reveal></div>
       </div>
     </section>
 
     <!-- ROADMAP -->
-    <section class="section section--alt" id="roadmap">
+    <section class="section" id="roadmap">
       <div class="wrap">
-        <div class="section__head">
+        <div class="section__head" data-reveal>
           <span class="kicker">12–18 month plan</span>
           <h2>Trust first. One visible win fast. Foundation in parallel.</h2>
         </div>
-        <div class="roadmap" id="roadmapGrid"></div>
+        <div class="roadmap" id="roadmapGrid" data-reveal></div>
       </div>
     </section>
 
     <!-- CANDIDATE -->
-    <section class="section" id="candidate">
+    <section class="section section--alt" id="candidate">
       <div class="wrap candidate">
-        <div class="candidate__left">
+        <div class="candidate__left" data-reveal>
           <span class="kicker">The candidate</span>
-          <h2 id="candName">Your Name</h2>
+          <h2 id="candName">Daniel Lawton</h2>
           <p class="candidate__tag" id="candTag"></p>
           <ul class="candidate__diff" id="candDiff"></ul>
           <div class="candidate__contact" id="candContact"></div>
         </div>
-        <div class="candidate__right">
+        <div class="candidate__right" data-reveal>
           <div class="quotecard">
             <div class="quotecard__mark">“</div>
             <p>A construction-aware data leader who has already <strong>built and shipped</strong> modern data platforms and AI products from the ground up — not just theorized about them.</p>
@@ -143,9 +168,10 @@
       <div class="wrap footer__inner">
         <div>
           <div class="brand brand--footer"><span class="brand__mark">TG</span><span class="brand__name">GALLAGHER</span></div>
-          <p class="footer__note">Prototype · built as a candidate briefing for the Head of Data Architecture &amp; AI role. Company facts are public; all platform data is illustrative.</p>
+          <p class="footer__note">Prototype built as a candidate briefing for Head of Data Architecture &amp; AI. Company facts are public; all platform metrics are illustrative.</p>
         </div>
         <div class="footer__cta">
+          <button class="btn btn--outline" id="printBrief">⤓ Executive brief</button>
           <button class="btn btn--primary" id="footEnter">Enter the Command Center</button>
           <span id="footContact"></span>
         </div>
@@ -153,21 +179,22 @@
     </footer>
   </main>
 
-  <!-- ======================= CONSOLE (COMMAND CENTER) VIEW ======================= -->
+  <!-- ======================= CONSOLE VIEW ======================= -->
   <div id="consoleView" hidden>
     <aside class="console__side">
       <div class="console__brand"><span class="brand__mark">TG</span><div><strong>Command Center</strong><small>Enterprise Data &amp; AI</small></div></div>
       <nav class="console__nav" id="consoleNav">
         <button data-panel="exec" class="is-active"><i>▤</i> Executive Overview</button>
+        <button data-panel="insights"><i>✦</i> AI Insights</button>
         <button data-panel="projects"><i>▦</i> Projects</button>
         <button data-panel="jobcost"><i>▨</i> Job Cost &amp; WIP</button>
-        <button data-panel="copilot"><i>✦</i> AI Copilot</button>
+        <button data-panel="copilot"><i>◆</i> AI Copilot</button>
         <button data-panel="sources"><i>⇄</i> Data Sources</button>
         <button data-panel="governance"><i>◈</i> Governance</button>
         <button data-panel="settings"><i>⚙</i> Control Panel</button>
       </nav>
       <div class="console__sidefoot">
-        <div class="pulse"><span class="pulse__dot"></span> Live · synced 4 min ago</div>
+        <div class="pulse"><span class="pulse__dot"></span> <span id="syncLabel">Live · synced 4 min ago</span></div>
         <button class="btn btn--ghost btn--sm" id="sideExit">← Back to briefing</button>
       </div>
     </aside>
@@ -176,13 +203,15 @@
       <div class="console__topbar">
         <div class="console__title" id="panelTitle">Executive Overview</div>
         <div class="console__tools">
+          <div class="console__clock" id="clock"></div>
           <button class="btn btn--ghost btn--sm" id="consolePalette"><kbd>⌘</kbd><kbd>K</kbd> Commands</button>
           <button class="btn btn--ghost btn--sm" id="genReport">Generate report</button>
-          <div class="avatar" title="Signed in as admin">AD</div>
+          <div class="avatar" title="Signed in as admin">DL</div>
         </div>
       </div>
       <div class="console__scroll">
         <section class="panel is-active" data-panel="exec" id="panel-exec"></section>
+        <section class="panel" data-panel="insights" id="panel-insights"></section>
         <section class="panel" data-panel="projects" id="panel-projects"></section>
         <section class="panel" data-panel="jobcost" id="panel-jobcost"></section>
         <section class="panel" data-panel="copilot" id="panel-copilot"></section>
@@ -193,17 +222,23 @@
     </div>
   </div>
 
-  <!-- ======================= COMMAND PALETTE ======================= -->
+  <!-- DRILL-DOWN MODAL -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal__scrim" data-close-modal></div>
+    <div class="modal__box" id="modalBox" role="dialog" aria-label="Project detail"></div>
+  </div>
+
+  <!-- COMMAND PALETTE -->
   <div class="palette" id="palette" hidden>
     <div class="palette__scrim" data-close-palette></div>
     <div class="palette__box" role="dialog" aria-label="Command palette">
-      <input type="text" id="paletteInput" placeholder="Type a command…  (try 'flag risk', 'wip report', 'copilot')" autocomplete="off" />
+      <input type="text" id="paletteInput" placeholder="Type a command…  (try 'flag risk', 'wip report', 'copilot', 'roi')" autocomplete="off" />
       <ul class="palette__list" id="paletteList"></ul>
       <div class="palette__foot"><kbd>↑</kbd><kbd>↓</kbd> navigate · <kbd>↵</kbd> run · <kbd>esc</kbd> close</div>
     </div>
   </div>
 
-  <!-- ======================= AI COPILOT DOCK ======================= -->
+  <!-- AI COPILOT DOCK -->
   <div class="copilot" id="copilotDock" hidden>
     <div class="copilot__head">
       <div class="copilot__id"><span class="copilot__spark">✦</span> Project Copilot <small>RAG · grounded to governed data</small></div>
@@ -212,16 +247,13 @@
     <div class="copilot__stream" id="copilotStream"></div>
     <div class="copilot__chips" id="copilotChips"></div>
     <form class="copilot__input" id="copilotForm">
-      <input type="text" id="copilotText" placeholder="Ask about WIP, margin, at-risk jobs, the architecture…" autocomplete="off" />
+      <input type="text" id="copilotText" placeholder="Ask about WIP, margin, at-risk jobs, ROI…" autocomplete="off" />
       <button class="btn btn--primary btn--sm" type="submit">Send</button>
     </form>
   </div>
   <button class="copilot-fab" id="copilotFab" title="Ask the AI Copilot" hidden>✦</button>
 
-  <!-- ======================= TOASTS ======================= -->
   <div class="toasts" id="toasts"></div>
-
-  <!-- ======================= TOOLTIP ======================= -->
   <div class="chart-tip" id="chartTip" hidden></div>
 
   <script src="assets/data.js"></script>
